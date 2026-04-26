@@ -1,1576 +1,315 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stag.io · Where Internships Begin</title>
-  <!-- Bootstrap 5 CSS + Icons + Google Fonts -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet" />
-  <style>
-    /* custom overrides and utilities — keep the same brand aesthetic */
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --black: #000;
-      --white: #fff;
-      --gray: #fff;
-      --accent: #fff;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--black);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      overflow-x: hidden;
-    }
-    /* navbar glass morphism + solid on scroll */
-    .navbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 200;
-      padding: 1.2rem 2rem;
-      transition: background 0.5s, padding 0.4s;
-      background: transparent;
-    }
-    .navbar.solid {
-      background: rgba(0,0,0,0.88);
-      backdrop-filter: blur(24px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 0.7rem 2rem;
-    }
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      font-weight: 900;
-      color: var(--white);
-      text-decoration: none;
-      letter-spacing: -0.5px;
-    }
-    .nav-logo span { color: var(--accent); }
-    .nav-link-custom {
-      font-size: 0.83rem;
-      letter-spacing: 0.05em;
-      color: rgba(255,255,255,0.6) !important;
-      transition: color 0.2s;
-      margin-right: 1.2rem;
-    }
-    .nav-link-custom:hover { color: #fff !important; }
-    .btn-ghost {
-      font-size: 0.83rem;
-      color: rgba(255,255,255,0.65);
-      text-decoration: none;
-      transition: color 0.2s;
-      background: transparent;
-      border: none;
-    }
-    .btn-ghost:hover { color: #fff; }
-    .btn-pill {
-      padding: 0.65rem 1.6rem;
-      background: #fff;
-      color: #000;
-      border-radius: 100px;
-      font-size: 0.83rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: background 0.2s;
-      display: inline-block;
-    }
-    .btn-pill:hover { background: var(--accent); color: #000; }
- /* HERO fullscreen video */
-    .hero {
-  position: relative;
-  width: 100%;
-  min-height: 100vh; /* تغيير height إلى min-height */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 100px 0; /* إضافة مساحة لضمان عدم التصاق الأزرار بالقسم التالي */
-}
-    .hero video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-    }
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.55) 70%, rgba(0,0,0,1) 100%);
-      z-index: 1;
-    }
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 860px;
-      padding: 2rem;
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.45rem 1.3rem;
-      border: 1px solid rgba(255,255,255,0.22);
-      border-radius: 100px;
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 2.5rem;
-      backdrop-filter: blur(10px);
-      background: rgba(255,255,255,0.05);
-      animation: up 1.1s ease both;
-    }
-    .live-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      animation: blink 2s ease infinite;
-    }
-    @keyframes blink { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(0.7); } }
-    .hero-content h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(3.8rem, 9vw, 8rem);
-      font-weight: 900;
-      line-height: 0.97;
-      letter-spacing: -3px;
-      margin-bottom: 2rem;
-      animation: up 1.1s 0.12s ease both;
-    }
-    .hero-content h1 em { font-style: italic; color: var(--accent); }
-    .hero-content p {
-      font-size: clamp(1rem, 2vw, 1.22rem);
-      color: rgba(255,255,255,0.6);
-      line-height: 1.7;
-      max-width: 520px;
-      margin: 0 auto 3rem;
-      animation: up 1.1s 0.24s ease both;
-    }
-    .hero-btns {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      animation: up 1.1s 0.36s ease both;
-    }
-    .btn-hero-white {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 1rem 2.5rem;
-      background: #fff;
-      color: #000;
-      border-radius: 100px;
-      font-size: 0.88rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: background 0.25s, transform 0.2s;
-    }
-    .btn-hero-white:hover { background: var(--accent); transform: scale(1.03); color:#000; }
-    .btn-hero-border {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 1rem 2.5rem;
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 100px;
-      font-size: 0.88rem;
-      color: #fff;
-      text-decoration: none;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .btn-hero-border:hover { border-color: #fff; background: rgba(255,255,255,0.08); color:#fff; }
-    .scroll-arrow {
-      position: absolute;
-      bottom: 2.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      animation: up 1.1s 0.6s ease both;
-    }
-    .scroll-arrow span { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
-    .arrow-line {
-      width: 1px;
-      height: 55px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
-      animation: drip 2.2s ease infinite;
-      transform-origin: top;
-    }
-    @keyframes drip { 0% { transform: scaleY(0); opacity: 1; } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
-    @keyframes up { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
- /* ticker */
-    .ticker {
-      background: var(--accent);
-      overflow: hidden;
-      white-space: nowrap;
-      padding: 0.95rem 0;
-    }
-    .ticker-track {
-      display: inline-flex;
-      animation: slide 20s linear infinite;
-    }
-    .ticker-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 1.2rem;
-      padding: 0 2.2rem;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #000;
-    }
-    .ticker-item i { font-size: 0.65rem; }
-    @keyframes slide { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mekhzer Rawnak Ayat Errahmane</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-    /* stats grid uses bootstrap row/col, but we keep the card look */
-    .stat-card {
-      padding: 3rem 2rem;
-      text-align: center;
-      border-right: 1px solid rgba(255,255,255,0.07);
-      transition: background 0.3s;
-    }
-    .stat-card:last-child { border-right: none; }
-    .stat-card:hover { background: rgba(255,255,255,0.03); }
-    .stat-n {
-      font-family: 'Playfair Display', serif;
-      font-size: 3.8rem;
-      font-weight: 900;
-      line-height: 1;
-      color: #fff;
-    }
-    .stat-n sup { font-size: 2rem; color: var(--accent); vertical-align: top; margin-top: 0.3rem; }
-    .stat-l { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray); margin-top: 0.5rem; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* moving photo strip */
-
-    /*                     */
-    /* moving photo strip - نسخة عصرية ومطورة */
-.strip-section { 
-    padding: 7rem 2rem 5rem; 
-    position: relative;
-    overflow: hidden;
-}
-
-/* إضافة خلفية متوهجة خلف القسم */
-.strip-section::before {
-    content: '';
-    position: absolute;
-    top: 20%;
-    left: -20%;
-    width: 80%;
-    height: 80%;
-    background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%);
-    pointer-events: none;
-    z-index: 0;
-}
-
-.photo-strip { 
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
-}
-
-/* إضافة تأثير تلاشي على الأطراف */
-.photo-strip::before,
-.photo-strip::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 120px;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.photo-strip::before {
-    left: 0;
-    background: linear-gradient(to right, #000000, transparent);
-}
-
-.photo-strip::after {
-    right: 0;
-    background: linear-gradient(to left, #000000, transparent);
-}
-
-.photo-track {
-    display: flex;
-    gap: 1.8rem;
-    animation: striproll 35s cubic-bezier(0.45, 0.05, 0.2, 0.99) infinite;
-    width: max-content;
-    will-change: transform;
-}
-
-.photo-track:hover { 
-    animation-play-state: paused; 
-}
-
-@keyframes striproll { 
-    0% { transform: translateX(0); } 
-    100% { transform: translateX(-50%); } 
-}
-
-/* تنسيق البطاقة العصرية */
-.photo-card {
-    width: 360px;
-    height: 480px;
-    border-radius: 24px;
-    overflow: hidden;
-    flex-shrink: 0;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    box-shadow: 0 10px 30px -8px rgba(0,0,0,0.5);
-    transform-origin: center;
-}
-
-.photo-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 25px 40px -12px rgba(59,130,246,0.3);
-}
-
-/* إطار لامع حول البطاقة عند الهوفر */
-.photo-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 24px;
-    padding: 1.5px;
-    background: linear-gradient(135deg, transparent 0%, #3b82f6 50%, transparent 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
-    z-index: 2;
-}
-
-.photo-card:hover::before {
-    opacity: 1;
-}
-
-.photo-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.75) saturate(0.8) contrast(1.05);
-    transition: all 0.7s cubic-bezier(0.3, 0.9, 0.4, 1.1);
-}
-
-.photo-card:hover img { 
-    transform: scale(1.1); 
-    filter: brightness(0.95) saturate(1.15) contrast(1.1);
-}
-
-/* تحسين تسميات البطاقة */
-.photo-label {
-    position: absolute;
-    bottom: 0; 
-    left: 0; 
-    right: 0;
-    padding: 2rem 1.8rem 1.8rem;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
-    transform: translateY(0);
-    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-}
-
-.photo-card:hover .photo-label {
-    transform: translateY(-8px);
-}
-
-.photo-tag { 
-    font-size: 0.7rem; 
-    letter-spacing: 0.2em; 
-    text-transform: uppercase; 
-    background: linear-gradient(135deg, #3b82f6, #60a5fa);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin-bottom: 0.6rem;
-    font-weight: 600;
-    display: inline-block;
-}
-
-.photo-title { 
-    font-family: 'Playfair Display', serif; 
-    font-size: 1.4rem; 
-    font-weight: 700; 
-    line-height: 1.3;
-    color: #ffffff;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-
-/* إضافة مؤشر للتمرير */
-.scroll-indicator {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 3rem;
-}
-
-.scroll-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(59,130,246,0.3);
-    transition: all 0.3s ease;
-}
-
-.scroll-dot.active {
-    width: 28px;
-    border-radius: 20px;
-    background: #3b82f6;
-}
-
-/* تحسينات للشاشات الصغيرة */
-@media (max-width: 768px) {
-    .photo-card {
-        width: 280px;
-        height: 400px;
-    }
-    
-    .photo-title {
-        font-size: 1.1rem;
-    }
-    
-    .photo-label {
-        padding: 1.5rem 1.2rem;
-    }
-    
-    .strip-section {
-        padding: 4rem 1rem;
-    }
-    
-    .photo-strip::before,
-    .photo-strip::after {
-        width: 60px;
-    }
-}
-
-
-    /* features grid using Bootstrap cols */
-    .feature-item {
-      padding: 3rem 2.3rem;
-      border-right: 1px solid rgba(255,255,255,0.07);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      transition: background 0.3s;
-      height: 100%;
-    }
-    .feature-item:hover { background: rgba(255,255,255,0.03); }
-    .fc-icon {
-      width: 46px; height: 46px;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
-      color: var(--accent);
-      margin-bottom: 1.8rem;
-      transition: background 0.3s, border-color 0.3s, color 0.3s;
-    }
-    .feature-item:hover .fc-icon { background: var(--accent); color: #000; border-color: var(--accent); }
-    .feature-item h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.7rem; }
-    .feature-item p { font-size: 0.86rem; color: var(--gray); line-height: 1.7; }
- /* process sticky + steps */
-    .process-left {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 5rem 4rem;
-      background: #070707;
-    }
-    .process-left h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem,4vw,4rem); font-weight: 900; line-height: 1.05; letter-spacing: -1.5px; }
-    .process-left h2 em { font-style: italic; color: var(--accent); }
-    .btn-accent {
-      display: inline-flex; align-items: center; gap: 0.7rem;
-      padding: 1rem 2.2rem;
-      background: var(--accent); color: #000;
-      border-radius: 100px;
-      font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em;
-      text-decoration: none; width: fit-content;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .btn-accent:hover { opacity: 0.82; transform: scale(1.03); color:#000; }
-    .step-box {
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 2.5rem;
-      margin-bottom: 1.5rem;
-      transition: border-color 0.3s, background 0.3s;
-    }
-    .step-box:hover { border-color: #5e7aa8; background: rgba(255, 255, 255, 0.015); }
-    .step-n { font-family: 'Playfair Display', serif; font-size: 4rem; font-weight: 900; color: #224172 !important; line-height: 1; margin-bottom: 0.8rem; transition: color 0.3s; }
-    .step-box:hover .step-n { color: #3b82f6; }
-    .step-box h4 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; margin-bottom: 0.6rem; }
-    .step-box p { font-size: 0.86rem; color: var(--gray); line-height: 1.7; }
-
-    /* user cards (3 cols) */
-    .user-card {
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 2.8rem 2.3rem;
-      transition: border-color 0.3s, transform 0.3s;
-      height: 100%;
-      background: transparent;
-    }
-    .user-card:hover { border-color: #3b82f6; transform: translateY(-5px); }
-    .user-card.featured {
-      background: var(--accent); color: #000;
-      border-color: transparent;
-    }
-    .user-card.featured .ulabel, .user-card.featured .udesc, .user-card.featured .uli { color: rgba(0,0,0,0.55); }
-    .user-card.featured .uli i { color: #000; }
-    .user-card.featured .ubtn { background: #000; color: #fff; }
-    .user-card.featured .ubtn:hover { background: #000000; }
-    .uicon {
-      width: 52px; height: 52px;
-      border-radius: 13px;
-      background: rgba(255,255,255,0.07);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; color: var(--accent);
-      margin-bottom: 1.7rem;
-    }
-    .user-card.featured .uicon { background: rgba(0,0,0,0.12); color: #000; }
-    .ulabel { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.6rem; }
-    .uname { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 900; letter-spacing: -0.4px; line-height: 1.1; margin-bottom: 0.9rem; }
-    .udesc { font-size: 0.86rem; color: var(--gray); line-height: 1.7; margin-bottom: 2rem; }
-    .ulist { list-style: none; margin-bottom: 2.5rem; padding-left: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-    .uli { display: flex; align-items: center; gap: 0.75rem; font-size: 0.84rem; color: var(--gray); }
-    .uli i { color: var(--accent); font-size: 0.88rem; }
-    .ubtn {
-      display: inline-flex; align-items: center; gap: 0.6rem;
-      padding: 0.82rem 1.8rem;
-      background: rgba(255,255,255,0.09);
-      color: #fff; border-radius: 100px;
-      font-size: 0.8rem; font-weight: 500; letter-spacing: 0.05em;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-    .ubtn:hover { background: rgba(255,255,255,0.16); color:#fff; }
- /* fullscreen image CTA */
-    .cta-full {
-      position: relative;
-      height: 85vh;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-    }
-    .cta-full img {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      filter: brightness(0.35) saturate(0.6);
-      animation: kbcta 20s ease-in-out infinite alternate;
-    }
-    @keyframes kbcta { 0% { transform: scale(1) translate(0,0); } 100% { transform: scale(1.06) translate(-1.5%, 1%); } }
-    .cta-full-overlay { position: absolute; inset: 0; background: linear-gradient(120deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 100%); }
-    .cta-full-content { position: relative; z-index: 2; padding: 0 6rem; max-width: 820px; }
-    .cta-full-content h2 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 6vw, 6.5rem); font-weight: 900; line-height: 0.97; letter-spacing: -2.5px; margin-bottom: 1.5rem; }
-    .cta-full-content h2 em { font-style: italic; color: var(--accent); }
-    .cta-full-content p { font-size: 1.05rem; color: rgba(255,255,255,0.55); line-height: 1.75; max-width: 460px; margin-bottom: 3rem; }
-
-    /* footer */
-    footer { background: #040404; border-top: 1px solid rgba(255,255,255,0.06); padding: 5rem 2rem 3rem; }
-    .ft-logo { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; margin-bottom: 1.2rem; }
-    .ft-logo span { color: var(--accent); }
-    .ft-brand p { font-size: 0.86rem; color: var(--gray); line-height: 1.75; max-width: 270px; }
-    .ft-col h5 { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-bottom: 1.4rem; }
-    .ft-col ul { list-style: none; padding-left: 0; }
-    .ft-col li { margin-bottom: 0.85rem; }
-    .ft-col a { font-size: 0.88rem; color: var(--gray); text-decoration: none; transition: color 0.2s; }
-    .ft-col a:hover { color: #fff; }
-    .socials a {
-      width: 37px; height: 37px;
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 50%;
-      display: inline-flex; align-items: center; justify-content: center;
-      color: var(--gray); font-size: 0.88rem;
-      margin-left: 0.6rem;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .socials a:hover { border-color: var(--accent); color: var(--accent); }
-    .sec-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-    }
-    .sec-label::before { content:''; width:28px; height:1px; background:var(--accent); }
-    .r { opacity: 0; transform: translateY(32px); transition: opacity 0.85s ease, transform 0.85s ease; }
-    .r.on { opacity: 1; transform: none; }
-    .d1 { transition-delay: 0.1s; }
-    .d2 { transition-delay: 0.2s; }
-    .d3 { transition-delay: 0.3s; }
-    @media (max-width: 992px) {
-      .process-left { position: relative; height: auto; padding: 4rem 2rem; }
-      .cta-full-content { padding: 0 2rem; }
-      .stat-card { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
-      .stats-row .col-md-3:last-child .stat-card { border-bottom: none; }
-    }
-    @media (max-width: 768px) {
-      .strip-section, .feats, .users { padding: 4rem 1.5rem; }
-      .hero-content h1 { letter-spacing: -1px; }
-      .cta-full { height: 70vh; }
-    }
-    /* Stats Custom Style */
-/* Dashboard Section Styling */
-
-
-
-
-
-/* Responsiveness for Full Width */
-@media (max-width: 991px) {
-  .dashboard-card-full .col-lg-8 {
-    border-end: none !important;
-    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-    padding-right: 1.5rem !important;
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --accent: #7c6af7;
+    --accent2: #4fd1c5;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --card: #16161f;
   }
-  .dashboard-card-full .col-lg-4 {
-    padding-left: 1.5rem !important;
+
+  body {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
   }
-}
 
-
-
-/* --- Testimonials Styles --- */
-.testimonials-section {
-    background: #000;
-    padding: 80px 0;
-    overflow: hidden;
-}
-
-/* حاوية العرض الرئيسية مع تأثير التلاشي عند الأطراف */
-.testimonials-wrapper {
-    position: relative;
-    width: 100%;
-    padding: 40px 0;
-}
-
-.testimonials-wrapper::before,
-.testimonials-wrapper::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    width: 200px;
-    height: 100%;
-    z-index: 5;
-    pointer-events: none;
-}
-
-.testimonials-wrapper::before {
-    left: 0;
-    background: linear-gradient(to right, #000, transparent);
-}
-
-.testimonials-wrapper::after {
-    right: 0;
-    background: linear-gradient(to left, #000, transparent);
-}
-
-/* المسار المتحرك */
-.testimonial-track {
+  /* NAV */
+  nav {
     display: flex;
-    gap: 30px;
-    width: max-content; /* يجعل العرض يتناسب مع عدد البطاقات */
-    animation: scrollInfinite 40s linear infinite;
-}
-
-/* توقف الحركة عند التمرير بالماوس */
-.testimonial-track:hover {
-    animation-play-state: paused;
-}
-
-/* تصميم البطاقة */
-.testi-card {
-    flex: 0 0 400px; /* عرض ثابت لكل بطاقة */
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 28px;
-    padding: 40px;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.testi-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: #3b82f6; /* اللون الأزرق */
-    transform: translateY(-10px);
-}
-
-.active-card {
-    border-color: rgba(59, 130, 246, 0.2);
-    background: linear-gradient(145deg, rgba(59, 130, 246, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
-}
-
-.quote-icon {
-    font-size: 2.5rem;
-    color: #3b82f6;
-    margin-bottom: 20px;
-    opacity: 0.6;
-}
-
-.testi-text {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 30px;
-}
-
-.user-img-placeholder {
-    width: 50px;
-    height: 50px;
-    background: #3b82f6;
-    border-radius: 50%;
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    color: #fff;
-    font-size: 0.9rem;
-}
-
-.user-name {
-    color: #fff;
+    padding: 1.2rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
     font-size: 1.1rem;
-    margin-bottom: 2px;
-}
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
 
-.user-role {
-    color: #6b7280; /* اللون الرمادي */
-    font-size: 0.85rem;
-}
+  /* HERO */
+  .hero {
+    padding: 5rem 2.5rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    color: var(--accent2);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid var(--accent2);
+    padding: 0.3rem 0.7rem;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn {
+    padding: 0.65rem 1.5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--muted); }
 
-/* أنيميشن الحركة */
-@keyframes scrollInfinite {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(calc(-400px * 3 - 90px)); /* يتحرك بمقدار نصف البطاقات ليعود للبداية بسلاسة */
-    }
-}
+  /* SECTIONS */
+  section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .section-label {
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
 
-/* استجابة الشاشات الصغيرة */
-@media (max-width: 768px) {
-    .testi-card {
-        flex: 0 0 300px;
-        padding: 25px;
-    }
-    @keyframes scrollInfinite {
-        100% {
-            transform: translateX(calc(-300px * 3 - 90px));
-        }
-    }
-}
+  /* SKILLS */
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .skill-tag {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.85rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--text);
+    letter-spacing: 0.04em;
+  }
 
+  /* PROJECTS */
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s;
+  }
+  .project-card:hover { border-color: var(--accent); }
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+  .project-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .project-link {
+    font-size: 0.72rem;
+    color: var(--accent2);
+    text-decoration: none;
+    border: 1px solid var(--accent2);
+    padding: 0.25rem 0.6rem;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+  .project-link:hover { opacity: 0.7; }
+  .project-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+  .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .proj-tag {
+    font-size: 0.68rem;
+    color: var(--accent);
+    background: rgba(124, 106, 247, 0.08);
+    border: 1px solid rgba(124, 106, 247, 0.2);
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+  }
 
-/*                                     */
+  /* CONTACT */
+  .contact-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .contact-link {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .contact-link:hover { color: var(--text); border-color: var(--muted); }
 
- * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
 
-        body {
-            background-color: #000000;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* ========== قسم الإحصائيات بخطوط التقدم ========== */
-        .stats-premium-section {
-            background: linear-gradient(135deg, #000000 0%, #0a0a0f 100%);
-            position: relative;
-            overflow: hidden;
-            padding: 100px 0 100px 0;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-        }
-
-        .stats-glow {
-            position: absolute;
-            top: 10%;
-            left: -5%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(0,0,0,0) 70%);
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .stats-glow-right {
-            position: absolute;
-            bottom: 0;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, rgba(0,0,0,0) 70%);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .stats-badge {
-            display: inline-block;
-            background: rgba(59, 130, 246, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 100px;
-            padding: 8px 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #3b82f6;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            margin-bottom: 20px;
-        }
-
-        /* الكرت الرئيسي */
-        .progress-stats-card {
-            background: rgba(10, 10, 15, 0.7);
-            backdrop-filter: blur(20px);
-            border-radius: 48px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            padding: 2.5rem;
-            transition: all 0.3s ease;
-        }
-
-        /* كل بطاقة إحصائية */
-        .stat-progress-item {
-            background: rgba(20, 20, 28, 0.6);
-            border-radius: 28px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .stat-progress-item:hover {
-            border-color: rgba(59, 130, 246, 0.4);
-            background: rgba(30, 30, 40, 0.7);
-            transform: translateY(-3px);
-        }
-
-        /* عنوان الإحصائية */
-        .stat-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-            color: #9ca3af;
-            margin-bottom: 12px;
-        }
-
-        /* الرقم الكبير */
-        .stat-number {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #FFFFFF, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            line-height: 1;
-            margin-bottom: 15px;
-        }
-
-        /* شريط التقدم */
-        .progress-bar-container {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 100px;
-            height: 10px;
-            overflow: hidden;
-            margin: 15px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 100px;
-            background: linear-gradient(90deg, #fff, #fff, #fff);
-            background-size: 200% auto;
-            animation: shimmer 2s linear infinite;
-            width: 0%;
-            transition: width 1s ease-out;
-            position: relative;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 0% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        /* أهداف إضافية */
-        .target-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            color: #6c757d;
-            margin-top: 8px;
-        }
-
-        .target-info span:first-child i {
-            color: #fff;
-            margin-right: 4px;
-        }
-
-        /* أيقونات دائرية */
-        .stat-icon-circle {
-            width: 50px;
-            height: 50px;
-            background: rgba(59, 130, 246, 0.15);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .stat-icon-circle i {
-            font-size: 1.8rem;
-            color: #325691;
-        }
-
-        /* بطاقة الإجمالي */
-        .total-card {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.05));
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 32px;
-            padding: 1.8rem;
-            text-align: center;
-        }
-
-        .total-number {
-            font-size: 3.5rem;
-            font-weight: 800;
-            font-family: 'Playfair Display', serif;
-            background: linear-gradient(135deg, #fff, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        /* ========== قسم الميزات ========== */
-        .features-luxury-section {
-            background-color: #000 !important;
-            position: relative;
-            overflow: hidden;
-            padding: 80px 0 100px 0;
-        }
-
-        .new-glow {
-            position: absolute;
-            top: 20%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(0,0,0,0) 70%);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .shiny-text {
-            background: linear-gradient(to right, #fff 20%, #1c3a69 50%, #fff 80%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite;
-            display: inline-block;
-        }
-
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
-
-        .modern-card {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            border-radius: 24px !important;
-            padding: 40px !important;
-            height: 100%;
-            transition: all 0.4s ease-out !important;
-            backdrop-filter: blur(10px);
-        }
-
-        .modern-card:hover {
-            background: rgba(255, 255, 255, 0.07) !important;
-            border-color: #294572 !important;
-            transform: translateY(-10px) scale(1.02);
-        }
-
-        .modern-icon {
-            width: 50px;
-            height: 50px;
-            background: #294572;
-            color: white;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 25px;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-        }
-
-        .modern-card h3 {
-            font-family: 'Playfair Display', serif !important;
-            color: #fff !important;
-            font-weight: 700 !important;
-        }
-
-        .modern-card p {
-            color: #aaa !important;
-        }
-
-        @media (max-width: 768px) {
-            .stat-number {
-                font-size: 2rem;
-            }
-            .progress-stats-card {
-                padding: 1.5rem;
-            }
-            .total-number {
-                font-size: 2.5rem;
-            }
-        }
-
-    /*                */
-
-    
-  </style>
+  @media (max-width: 600px) {
+    nav, .hero, section { padding-left: 1.2rem; padding-right: 1.2rem; }
+    .hero h1 { font-size: 2rem; }
+    .project-header { flex-direction: column; gap: 0.5rem; }
+  }
+</style>
 </head>
 <body>
-<!-- BOOTSTRAP NAVBAR (responsive) -->
-<nav class="navbar navbar-expand-lg" id="navbar">
-  <div class="container-fluid px-3 px-lg-5">
-    <a href="#" class="nav-logo">stag<span>.</span>io</a>
-    <button class="navbar-toggler bg-transparent border-white text-white" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-      <i class="bi bi-list fs-3 text-white"></i>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="mainNav">
-      <div class="navbar-nav mx-auto mb-2 mb-lg-0">
-        <a class="nav-link nav-link-custom" href="#feats">Features</a>
-        <a class="nav-link nav-link-custom" href="#process">Process</a>
-        <a class="nav-link nav-link-custom" href="#users">Who's it for</a>
-      </div>
-      <div class="d-flex gap-3 align-items-center">
-        <a href="/login" class="btn-ghost">Sign in</a>
-        <a href="/register" class="btn-pill">Get started free</a>
-      </div>
-    </div>
+
+<nav>
+  <div class="nav-logo">MRA.</div>
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#skills">skills</a>
+    <a href="#projects">projects</a>
+    <a href="#contact">contact</a>
   </div>
 </nav>
 
-<!-- HERO VIDEO SECTION -->
-<section class="hero">
-  <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80">
-  <source src="{{ url_for('static', filename='images/hero-bg.mp4') }}" type="video/mp4" />
-    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1600&q=80" alt="Students" />
-  </video>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-badge"><span class="live-dot"></span> University–Enterprise Platform &nbsp;·&nbsp; Now Live</div>
-    <h1>Where<br><em>Internships</em><br>Begin.</h1>
-    <p>Connect students, companies and universities on one seamless platform. From smart matching to automated documents — all in one place.</p>
-    <div class="hero-btns">
-      <a href="/register" class="btn-hero-white">Start for free &nbsp;<i class="bi bi-arrow-right"></i></a>
-      <a href="/login" class="btn-hero-border">I'm a company</a>
-    </div>
+<div class="hero" id="about">
+  <div class="hero-tag">available for internships</div>
+  <h1>Mekhzer Rawnak<br><span>Ayat Errahmane</span></h1>
+  <p class="hero-desc">
+    Computer Science & Engineering student passionate about building digital solutions. 
+    Turning ideas into working software — one commit at a time.
+  </p>
+  <div class="hero-btns">
+    <a href="#projects" class="btn btn-primary">View projects</a>
+    <a href="#contact" class="btn btn-outline">Get in touch</a>
   </div>
-  <div class="scroll-arrow"><div class="arrow-line"></div><span>Scroll</span></div>
+</div>
+
+<section id="skills">
+  <div class="section-label">// skills</div>
+  <div class="skills-grid">
+    <span class="skill-tag">Python</span>
+    <span class="skill-tag">JavaScript</span>
+    <span class="skill-tag">HTML / CSS</span>
+    <span class="skill-tag">C / C++</span>
+    <span class="skill-tag">Java</span>
+    <span class="skill-tag">Git & GitHub</span>
+    <span class="skill-tag">Linux</span>
+    <span class="skill-tag">Data Structures</span>
+    <span class="skill-tag">Algorithms</span>
+    <span class="skill-tag">Web Development</span>
+    <span class="skill-tag">Problem Solving</span>
+  </div>
 </section>
 
+<section id="projects">
+  <div class="section-label">// projects</div>
 
- 
-<!-- TICKER -->
-
- <!-- STATS (Bootstrap grid) -->
-
-<!-- MOVING PHOTO STRIP -->
-<div class="strip-section">
-  <div class="container">
-    <div class="row align-items-end mb-5">
-      <div class="col-lg-6 r"><div class="sec-label">01 — Platform</div><h2 class="display-4 fw-bold" style="font-family:'Playfair Display',serif;">Built for every step<br>of your <em class="text-accent" style="color:var(--accent);font-style:italic;">journey</em></h2></div>
-      <div class="col-lg-6 r d1"><p class="text-secondary">From your first application to your official certificate — Stag.io handles it all in one seamless experience.</p></div>
+  <div class="project-card">
+    <div class="project-header">
+      <div class="project-name">Project Stag</div>
+      <a href="https://github.com/ayamekhzer05-glitch/project-stag.io" class="project-link" target="_blank">→ github</a>
     </div>
-    <div class="photo-strip r"><div class="photo-track">
-      <div class="photo-card"><img img src="{{ url_for('static', filename='images/student.jpg') }}"alt=""><div class="photo-label"><div class="photo-tag">For Students</div><div class="photo-title">Build your digital profile</div></div></div>
-      <div class="photo-card"><img src= "{{ url_for('static', filename='images/companies.jpg') }}"alt=""><div class="photo-label"><div class="photo-tag">For Companies</div><div class="photo-title">Post and manage offers</div></div></div>
-      <div class="photo-card"><img src="{{ url_for('static', filename='images/university.jpg') }}"alt=""><div class="photo-label"><div class="photo-tag">For Universities</div><div class="photo-title">Track every placement</div></div></div>
-      <div class="photo-card"><img src="{{ url_for('static', filename='images/certifacte.jpg') }}" alt=""><div class="photo-label"><div class="photo-tag">Auto Documents</div><div class="photo-title">Generate agreements instantly</div></div></div>
-      <div class="photo-card"><img src="{{ url_for('static', filename='images/matching.jpg') }}" alt=""><div class="photo-label"><div class="photo-tag">Smart Matching</div><div class="photo-title">Skill-based filtering</div></div></div>
-      <!-- duplicates -->
-      <div class="photo-card"><img src="{{ url_for('static', filename='images/student.jpg') }}" alt=""><div class="photo-label"><div class="photo-tag">For Students</div><div class="photo-title">Build your digital profile</div></div></div>
-      <div class="photo-card"><img src="{{ url_for('static', filename='images/companies.jpg') }}" alt=""><div class="photo-label"><div class="photo-tag">For Companies</div><div class="photo-title">Post and manage offers</div></div></div>
-      <div class="photo-card"><img src="{{ url_for('static', filename='images/university.jpg') }}" alt=""><div class="photo-label"><div class="photo-tag">For Universities</div><div class="photo-title">Track every placement</div></div></div>
-      <div class="photo-card"><img src="{{ url_for('static', filename='images/certifacte.jpg') }}"alt=""><div class="photo-label"><div class="photo-tag">Auto Documents</div><div class="photo-title">Generate agreements instantly</div></div></div>
-      <div class="photo-card"><img src="{{ url_for('static', filename='images/matching.jpg') }}" alt=""><div class="photo-label"><div class="photo-tag">Smart Matching</div><div class="photo-title">Skill-based filtering</div></div></div>
-    </div></div>
-  </div>
-</div>
- <!-- FEATURES (Bootstrap grid) -->
-
-
- <!-- ==================== القسم الأول: الإحصائيات بخطوط التقدم ==================== -->
-    <section class="stats-premium-section">
-        <div class="stats-glow"></div>
-        <div class="stats-glow-right"></div>
-        
-        <div class="container" style="position: relative; z-index: 3;">
-            <div class="text-center">
-                GROWTH METRICS
-            </div>
-            
-            <h2 class="text-center mb-3" style="font-family: 'Playfair Display', serif; font-weight: 800; font-size: 3rem; color: #ffffff;">
-                Students & Companies
-            </h2>
-            <p class="text-center text-secondary mb-5" style="max-width: 600px; margin: 0 auto 3rem auto;">
-                Tracking the growth of our community in real-time
-            </p>
-
-            <!-- الكرت الرئيسي -->
-            <div class="progress-stats-card">
-                <!-- الصف الأول: إجمالي الطلاب والشركات -->
-                <div class="row g-4 mb-5">
-                    <div class="col-md-6">
-                        <div class="total-card">
-                            <i class="bi bi-mortarboard-fill fs-1" style="color: #082047;"></i>
-                            <div class="total-number mt-2" id="totalStudents">0</div>
-                            <div class="text-secondary mt-2">Total Students Registered</div>
-                            <div class="mt-2">
-                                <span class="badge" style="background: rgba(59,130,246,0.2); color: #2563eb;">
-    <i class="bi bi-arrow-up"></i> +15.3% this month
-</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="total-card">
-                            <i class="bi bi-building fs-1" style="color: #082047;"></i>
-                            <div class="total-number mt-2" id="totalCompanies">0</div>
-                            <div class="text-secondary mt-2">Active Companies</div>
-                            <div class="mt-2">
-                                <span class="badge" style="background: rgba(59,130,246,0.2); color:#082047;">
-                                    <i class="bi bi-arrow-up"></i> +8.7% this month
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- الصف الثاني: خطوط التقدم التفصيلية -->
-                <div class="row g-4">
-                    <!-- 1. الطلاب النشطين -->
-                    <div class="col-md-6">
-                        <div class="stat-progress-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="stat-icon-circle">
-                                    <i class="bi bi-person-check-fill"></i>
-                                </div>
-                                <div class="text-end">
-                                    <div class="stat-title">ACTIVE STUDENTS</div>
-                                    <div class="stat-number" id="activeStudents">0</div>
-                                </div>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-fill" id="activeStudentsBar" style="width: 0%;"></div>
-                            </div>
-                            <div class="target-info">
-                                <span><i class="bi bi-flag"></i> Target: 500,000</span>
-                                <span id="activeStudentsPercent">0%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. الشركات النشطة -->
-                    <div class="col-md-6">
-                        <div class="stat-progress-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="stat-icon-circle">
-                                    <i class="bi bi-building-check"></i>
-                                </div>
-                                <div class="text-end">
-                                    <div class="stat-title">ACTIVE COMPANIES</div>
-                                    <div class="stat-number" id="activeCompanies">0</div>
-                                </div>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-fill" id="activeCompaniesBar" style="width: 0%;"></div>
-                            </div>
-                            <div class="target-info">
-                                <span><i class="bi bi-flag"></i> Target: 8,000</span>
-                                <span id="activeCompaniesPercent">0%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 3. الطلاب الذين حصلوا على تدريب -->
-                    <div class="col-md-6">
-                        <div class="stat-progress-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="stat-icon-circle">
-                                    <i class="bi bi-trophy-fill"></i>
-                                </div>
-                                <div class="text-end">
-                                    <div class="stat-title">PLACED STUDENTS</div>
-                                    <div class="stat-number" id="placedStudents">0</div>
-                                </div>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-fill" id="placedStudentsBar" style="width: 0%;"></div>
-                            </div>
-                            <div class="target-info">
-                                <span><i class="bi bi-flag"></i> Target: 300,000</span>
-                                <span id="placedStudentsPercent">0%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 4. فرص التدريب المتاحة -->
-                    <div class="col-md-6">
-                        <div class="stat-progress-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="stat-icon-circle">
-                                    <i class="bi bi-briefcase-fill"></i>
-                                </div>
-                                <div class="text-end">
-                                    <div class="stat-title">OPEN INTERNSHIPS</div>
-                                    <div class="stat-number" id="openInternships">0</div>
-                                </div>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-fill" id="openInternshipsBar" style="width: 0%;"></div>
-                            </div>
-                            <div class="target-info">
-                                <span><i class="bi bi-flag"></i> Target: 15,000</span>
-                                <span id="openInternshipsPercent">0%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- خط زمني واقعي -->
-                <div class="mt-5 pt-3 d-flex justify-content-between align-items-center flex-wrap border-top border-secondary border-opacity-25" style="padding-top: 1.5rem;">
-                    <div class="timestamp-modern" style="background: rgba(0,0,0,0.4); border-radius: 60px; padding: 5px 16px; font-size: 0.8rem; color: #aaa;">
-                        <i class="bi bi-calendar3"></i> Last updated: April 4, 2026 — Real-time sync
-                    </div>
-                    <div class="d-flex gap-3">
-                        <span class="text-light small"><i class="bi bi-check-circle-fill text-success"></i> 98% satisfaction rate</span>
-                        <span class="text-light small"><i class="bi bi-graph-up text-primary"></i> +24% growth YoY</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== القسم الثاني: Everything you need ==================== -->
-    <section class="features-luxury-section">
-        <div class="new-glow"></div>
-        <div class="container" style="position: relative; z-index: 3;">
-            <div class="sec-label mb-3" style="letter-spacing: 2px; color:#ffffff !important; font-weight:600;">02 — FEATURES</div>
-            <h2 class="display-3 mb-5 text-white" style="font-family: 'Playfair Display', serif; font-weight: 900;">
-                Everything you need
-            </h2>
-            
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="modern-card">
-                        <div class="modern-icon"><i class="bi bi-search"></i></div>
-                        <h3>Smart Matching</h3>
-                        <p>Skill-based filtering connects students with the right opportunities instantly.</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="modern-card">
-                        <div class="modern-icon"><i class="bi bi-file-earmark-check"></i></div>
-                        <h3>Digital Documents</h3>
-                        <p>Auto-generate agreements and certificates with a single click — zero paperwork.</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="modern-card">
-                        <div class="modern-icon"><i class="bi bi-grid-1x2"></i></div>
-                        <h3>Centralized Tracking</h3>
-                        <p>University admins validate and track all placements from one unified dashboard.</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="modern-card">
-                        <div class="modern-icon"><i class="bi bi-building"></i></div>
-                        <h3>Company Portal</h3>
-                        <p>Easy-to-use interface to post offers and manage applicants seamlessly.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-   
-
+    <p class="project-desc">
+      A web-based project built as part of my computer science engineering studies. 
+      Demonstrates full-stack development skills and practical problem solving.
+    </p>
+    <div class="project-tags">
+      <span class="proj-tag">Web</span>
+      <span class="proj-tag">GitHub</span>
+      <span class="proj-tag">CS Engineering</span>
     </div>
   </div>
-</div>
 
-<!-- PROCESS: sticky + steps with Bootstrap row/col -->
-<div id="process" class="process">
-  <div class="row g-0">
-    <div class="col-lg-6"><div class="process-left"><div class="sec-label">03 — Process</div><h2>Four steps to your<br><em>dream</em> internship</h2><p>Our streamlined process removes friction at every stage — from your first profile to your first day on the job.</p><a href="/register" class="btn-accent">Start now &nbsp;<i class="bi bi-arrow-right"></i></a></div></div>
-    <div class="col-lg-6"><div class="process-right p-4 p-lg-5"><div class="step-box r"><div class="step-n">01</div><h4>Create Your Profile</h4><p>Register with your university email and build a digital CV with your skills, experience and career goals.</p></div><div class="step-box r d1"><div class="step-n">02</div><h4>Search & Apply</h4><p>Browse curated internship offers filtered by skills, location, sector and type. Apply with one click.</p></div><div class="step-box r d2"><div class="step-n">03</div><h4>Get Matched</h4><p>Companies review your profile and select the most suitable candidates from a pre-vetted pool.</p></div><div class="step-box r d3"><div class="step-n">04</div><h4>Start Your Internship</h4><p>Admin validates the placement and auto-generates all official documents — ready to sign instantly.</p></div></div></div>
+  <div class="project-card" style="border-style: dashed; opacity: 0.5;">
+    <div class="project-header">
+      <div class="project-name">More coming soon...</div>
+    </div>
+    <p class="project-desc">Currently working on new projects. Check back soon.</p>
   </div>
-</div>
-
-
-<section class="testimonials-section">
-    <div class="container py-5">
-        <div class="sec-label mb-4">04 - Community Feedback</div>
-        <h2 class="dash-title mb-5">Trusted by Students & Companies.</h2>
-    </div>
-
-    <div class="testimonials-wrapper">
-        <div class="testimonial-track">
-            
-            <div class="testi-card">
-                <div class="quote-icon"><i class="bi bi-quote"></i></div>
-                <p class="testi-text">"The matching algorithm is incredibly accurate. I found an internship at a top tech firm within two weeks of joining stag.io."</p>
-                <div class="user-info d-flex align-items-center mt-4">
-                    <div class="user-img-placeholder me-3">SA</div>
-                    <div>
-                        <h5 class="user-name">Sarah Ahmed</h5>
-                        <span class="user-role">CS Student @ USTHB</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="testi-card active-card">
-                <div class="quote-icon"><i class="bi bi-quote"></i></div>
-                <p class="testi-text">"Finally, a platform that understands the needs of both companies and students in the region. Highly professional tool."</p>
-                <div class="user-info d-flex align-items-center mt-4">
-                    <div class="user-img-placeholder me-3" style="background: #6b7280;">OM</div>
-                    <div>
-                        <h5 class="user-name">Omar Mansour</h5>
-                        <span class="user-role">HR Director @ TechFlow</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="testi-card">
-                <div class="quote-icon"><i class="bi bi-quote"></i></div>
-                <p class="testi-text">"Automating the legal documents and contracts saved us hours of administrative work every month. Pure efficiency."</p>
-                <div class="user-info d-flex align-items-center mt-4">
-                    <div class="user-img-placeholder me-3">LY</div>
-                    <div>
-                        <h5 class="user-name">Lina Yasin</h5>
-                        <span class="user-role">University Coordinator</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="testi-card">
-                <div class="quote-icon"><i class="bi bi-quote"></i></div>
-                <p class="testi-text">"The matching algorithm is incredibly accurate. I found an internship at a top tech firm within two weeks of joining stag.io."</p>
-                <div class="user-info d-flex align-items-center mt-4">
-                    <div class="user-img-placeholder me-3">SA</div>
-                    <div><h5 class="user-name">Sarah Ahmed</h5><span class="user-role">CS Student</span></div>
-                </div>
-            </div>
-
-            <div class="testi-card active-card">
-                <div class="quote-icon"><i class="bi bi-quote"></i></div>
-                <p class="testi-text">"Finally, a platform that understands the needs of both companies and students in the region. Highly professional tool."</p>
-                <div class="user-info d-flex align-items-center mt-4">
-                    <div class="user-img-placeholder me-3" style="background: #6b7280;">OM</div>
-                    <div><h5 class="user-name">Omar Mansour</h5><span class="user-role">HR Director</span></div>
-                </div>
-            </div>
-
-            <div class="testi-card">
-                <div class="quote-icon"><i class="bi bi-quote"></i></div>
-                <p class="testi-text">"Automating the legal documents and contracts saved us hours of administrative work every month. Pure efficiency."</p>
-                <div class="user-info d-flex align-items-center mt-4">
-                    <div class="user-img-placeholder me-3">LY</div>
-                    <div><h5 class="user-name">Lina Yasin</h5><span class="user-role">Coordinator</span></div>
-                </div>
-            </div>
-
-        </div>
-    </div>
 </section>
- <!-- USERS cards (Bootstrap grid) -->
-<div id="users" class="users py-5">
-  <div class="container">
-    <div class="r"><div class="sec-label">05 — For Everyone</div><h2 class="display-4 fw-bold" style="font-family:'Playfair Display',serif;">Built for every <em style="color:var(--accent);font-style:italic;">stakeholder</em></h2></div>
-    <div class="row mt-5 g-4">
-      <div class="col-md-6 col-lg-4"><div class="user-card r"><div class="uicon"><i class="bi bi-book"></i></div><div class="ulabel">For Students</div><div class="uname">Launch your career</div><p class="udesc">Discover opportunities, build your profile, and track every step of your internship journey.</p><ul class="ulist"><li class="uli"><i class="bi bi-check-lg"></i> Digital CV with skill tags</li><li class="uli"><i class="bi bi-check-lg"></i> Filter by location & tech stack</li><li class="uli"><i class="bi bi-check-lg"></i> Live application tracking</li><li class="uli"><i class="bi bi-check-lg"></i> Instant document access</li></ul><a href="/register?type=student" class="ubtn">Register as student &nbsp;<i class="bi bi-arrow-right"></i></a></div></div>
-      <div class="col-md-6 col-lg-4"><div class="user-card featured r d1"><div class="uicon"><i class="bi bi-building"></i></div><div class="ulabel">For Companies</div><div class="uname">Find top talent</div><p class="udesc">Post internship offers and connect with motivated, pre-vetted students ready to contribute.</p><ul class="ulist"><li class="uli"><i class="bi bi-check-lg"></i> Post & manage offers</li><li class="uli"><i class="bi bi-check-lg"></i> Review qualified candidates</li><li class="uli"><i class="bi bi-check-lg"></i> Accept or reject applications</li><li class="uli"><i class="bi bi-check-lg"></i> Streamlined hiring workflow</li></ul><a href="/register?type=company" class="ubtn">Register company &nbsp;<i class="bi bi-arrow-right"></i></a></div></div>
-      <div class="col-md-6 col-lg-4"><div class="user-card r d2"><div class="uicon"><i class="bi bi-mortarboard"></i></div><div class="ulabel">For Universities</div><div class="uname">Manage with ease</div><p class="udesc">Oversee all placements, validate internships and auto-generate documents from one dashboard.</p><ul class="ulist"><li class="uli"><i class="bi bi-check-lg"></i> Validate placements</li><li class="uli"><i class="bi bi-check-lg"></i> Auto-generate documents</li><li class="uli"><i class="bi bi-check-lg"></i> Track student progress</li><li class="uli"><i class="bi bi-check-lg"></i> Detailed statistics</li></ul><a href="/login?type=admin" class="ubtn">Admin access &nbsp;<i class="bi bi-arrow-right"></i></a></div></div>
-    </div>
+
+<section id="contact">
+  <div class="section-label">// contact</div>
+  <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1.5rem;">
+    Open to internships, collaborations, and student projects.
+  </p>
+  <div class="contact-links">
+    <a href="https://github.com/ayamekhzer05-glitch" class="contact-link" target="_blank">GitHub</a>
+    <a href="mailto:mekhzerrawnakaya@gmail.com" class="contact-link">Email</a>
   </div>
-</div>
+</section>
 
-/*              */
-
-
-/*             */
-
-<!-- FULLSCREEN IMAGE CTA -->
-<div class="cta-full"><img src="{{ url_for('static', filename='images/s.jpg') }}"alt=""><div class="cta-full-overlay"></div><div class="cta-full-content"><h2>Ready to <em>transform</em><br>your internship<br>experience?</h2><p>Join hundreds of students and companies already using Stag.io to build meaningful careers.</p><a href="/register" class="btn-accent" style="font-size:0.95rem;padding:1.1rem 2.8rem;">Get started free &nbsp;<i class="bi bi-arrow-right"></i></a></div></div>
- <!-- FOOTER (Bootstrap grid) -->
 <footer>
-  <div class="container">
-    <div class="row g-5 pb-5 border-bottom border-white border-opacity-10">
-      <div class="col-md-6 col-lg-4"><div class="ft-brand"><div class="ft-logo">stag<span>.</span>io</div><p>The university–enterprise platform that makes connecting students with opportunity effortless.</p></div></div>
-      <div class="col-md-6 col-lg-2"><div class="ft-col"><h5>Platform</h5><ul><li><a href="#">For Students</a></li><li><a href="#">For Companies</a></li><li><a href="#">For Universities</a></li><li><a href="#">Pricing</a></li></ul></div></div>
-      <div class="col-md-6 col-lg-2"><div class="ft-col"><h5>Company</h5><ul><li><a href="#">About us</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div></div>
-      <div class="col-md-6 col-lg-2"><div class="ft-col"><h5>Legal</h5><ul><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li><li><a href="#">Cookie Policy</a></li></ul></div></div>
-    </div>
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-4"><p class="small text-white-50 mb-0">© 2026 Stag.io — University-Enterprise Internship Platform. All rights reserved.</p><div class="socials mt-3 mt-md-0"><a href="#"><i class="bi bi-linkedin"></i></a><a href="#"><i class="bi bi-twitter-x"></i></a><a href="#"><i class="bi bi-instagram"></i></a></div></div>
-  </div>
+  &copy; 2026 Mekhzer Rawnak Ayat Errahmane — Built with HTML, CSS & passion.
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => { navbar.classList.toggle('solid', window.scrollY > 60); }, { passive: true });
-  const reveal = document.querySelectorAll('.r');
-  const obs = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); } }); }, { threshold: 0.1 });
-  reveal.forEach(el => obs.observe(el));
-
-  /*                                */
-
-  (function() {
-            // الأهداف (Targets)
-            const TARGETS = {
-                totalStudents: 600000,
-                totalCompanies: 12000,
-                activeStudents: 500000,
-                activeCompanies: 8000,
-                placedStudents: 300000,
-                openInternships: 15000
-            };
-
-            // القيم الحالية (Current Values)
-            let currentValues = {
-                totalStudents: 412847,
-                totalCompanies: 9872,
-                activeStudents: 386421,
-                activeCompanies: 6543,
-                placedStudents: 245678,
-                openInternships: 12345
-            };
-
-            // عناصر DOM
-            const elements = {
-                totalStudents: document.getElementById('totalStudents'),
-                totalCompanies: document.getElementById('totalCompanies'),
-                activeStudents: document.getElementById('activeStudents'),
-                activeCompanies: document.getElementById('activeCompanies'),
-                placedStudents: document.getElementById('placedStudents'),
-                openInternships: document.getElementById('openInternships'),
-                activeStudentsBar: document.getElementById('activeStudentsBar'),
-                activeCompaniesBar: document.getElementById('activeCompaniesBar'),
-                placedStudentsBar: document.getElementById('placedStudentsBar'),
-                openInternshipsBar: document.getElementById('openInternshipsBar'),
-                activeStudentsPercent: document.getElementById('activeStudentsPercent'),
-                activeCompaniesPercent: document.getElementById('activeCompaniesPercent'),
-                placedStudentsPercent: document.getElementById('placedStudentsPercent'),
-                openInternshipsPercent: document.getElementById('openInternshipsPercent')
-            };
-
-            // تحديث العرض
-            function updateDisplay() {
-                // تحديث الأرقام الكبيرة
-                elements.totalStudents.innerText = currentValues.totalStudents.toLocaleString();
-                elements.totalCompanies.innerText = currentValues.totalCompanies.toLocaleString();
-                elements.activeStudents.innerText = currentValues.activeStudents.toLocaleString();
-                elements.activeCompanies.innerText = currentValues.activeCompanies.toLocaleString();
-                elements.placedStudents.innerText = currentValues.placedStudents.toLocaleString();
-                elements.openInternships.innerText = currentValues.openInternships.toLocaleString();
-
-                // حساب النسب المئوية
-                const activeStudentsPercent = (currentValues.activeStudents / TARGETS.activeStudents) * 100;
-                const activeCompaniesPercent = (currentValues.activeCompanies / TARGETS.activeCompanies) * 100;
-                const placedStudentsPercent = (currentValues.placedStudents / TARGETS.placedStudents) * 100;
-                const openInternshipsPercent = (currentValues.openInternships / TARGETS.openInternships) * 100;
-
-                // تحديث أشرطة التقدم
-                elements.activeStudentsBar.style.width = Math.min(activeStudentsPercent, 100) + '%';
-                elements.activeCompaniesBar.style.width = Math.min(activeCompaniesPercent, 100) + '%';
-                elements.placedStudentsBar.style.width = Math.min(placedStudentsPercent, 100) + '%';
-                elements.openInternshipsBar.style.width = Math.min(openInternshipsPercent, 100) + '%';
-
-                // تحديث النسب المئوية النصية
-                elements.activeStudentsPercent.innerText = Math.floor(activeStudentsPercent) + '%';
-                elements.activeCompaniesPercent.innerText = Math.floor(activeCompaniesPercent) + '%';
-                elements.placedStudentsPercent.innerText = Math.floor(placedStudentsPercent) + '%';
-                elements.openInternshipsPercent.innerText = Math.floor(openInternshipsPercent) + '%';
-            }
-
-            // محاكاة التحديث التلقائي (زيادة تدريجية)
-            function simulateGrowth() {
-                // زيادة الطلاب الكلي
-                let studentIncrease = Math.floor(Math.random() * 150) + 50;
-                currentValues.totalStudents += studentIncrease;
-                
-                // زيادة الشركات الكلي
-                let companyIncrease = Math.floor(Math.random() * 8) + 2;
-                currentValues.totalCompanies += companyIncrease;
-                
-                // زيادة الطلاب النشطين
-                let activeStudentIncrease = Math.floor(Math.random() * 120) + 40;
-                currentValues.activeStudents = Math.min(currentValues.activeStudents + activeStudentIncrease, TARGETS.activeStudents);
-                
-                // زيادة الشركات النشطة
-                let activeCompanyIncrease = Math.floor(Math.random() * 5) + 1;
-                currentValues.activeCompanies = Math.min(currentValues.activeCompanies + activeCompanyIncrease, TARGETS.activeCompanies);
-                
-                // زيادة الطلاب الذين حصلوا على تدريب
-                let placedIncrease = Math.floor(Math.random() * 80) + 30;
-                currentValues.placedStudents = Math.min(currentValues.placedStudents + placedIncrease, TARGETS.placedStudents);
-                
-                // زيادة فرص التدريب المتاحة
-                let internshipsIncrease = Math.floor(Math.random() * 12) + 3;
-                currentValues.openInternships = Math.min(currentValues.openInternships + internshipsIncrease, TARGETS.openInternships);
-                
-                updateDisplay();
-            }
-
-            // تحديث أولي
-            updateDisplay();
-            
-            // تحديث كل 4 ثواني لمحاكاة الواقعية
-            setInterval(simulateGrowth, 4000);
-            
-            // تأثير ظهور متحرك للبطاقات
-            const progressItems = document.querySelectorAll('.stat-progress-item');
-            progressItems.forEach((item, index) => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    item.style.transition = 'all 0.6s ease';
-                    item.style.opacity = '1';
-                    item.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
-        })();
-        /*               */
-         
-        /*             */
-    </script>
-    <!-- bootstrap bundle (optional for toggles but not mandatory) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
-</script>
 </body>
 </html>
